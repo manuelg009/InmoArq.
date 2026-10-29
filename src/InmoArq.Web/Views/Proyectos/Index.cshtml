@@ -1,0 +1,59 @@
+@model ProyectosVM
+@{
+    ViewData["Title"] = "Diseño arquitectónico";
+}
+<div class="encabezado">
+    <h1>Diseño arquitectónico</h1>
+    <p class="tenue">@(Model.VeTodos ? "Todos los proyectos de diseño." : "Tus proyectos de diseño y su etapa actual.")</p>
+</div>
+
+@if (Actual.Puede(Permisos.ProyectosGestionar))
+{
+    <section class="tarjeta">
+        <h2>Nuevo proyecto</h2>
+        <form asp-controller="Proyectos" asp-action="Nuevo" method="post" class="en-linea">
+            <label>Nombre <input name="nombre" required></label>
+            <label>Etapa
+                <select name="etapa">
+                    @foreach (var e in InmoArq.Web.Controllers.ProyectosController.Etapas)
+                    {
+                        <option>@e</option>
+                    }
+                </select>
+            </label>
+            <label>Cliente
+                <select name="clienteId">
+                    <option value="">— Sin asignar —</option>
+                    @foreach (var c in Model.Clientes)
+                    {
+                        <option value="@c.Id">@c.Nombre</option>
+                    }
+                </select>
+            </label>
+            <button class="boton" type="submit">Crear</button>
+        </form>
+    </section>
+}
+
+<section class="tarjeta">
+    <div class="desplazable">
+        <table class="tabla">
+            <thead><tr><th>Proyecto</th><th>Etapa</th><th>Cliente</th><th>Arquitecto</th></tr></thead>
+            <tbody>
+                @foreach (var f in Model.Proyectos)
+                {
+                    <tr>
+                        <td>@f.Proyecto.Nombre</td>
+                        <td><span class="etiqueta">@f.Proyecto.Etapa</span></td>
+                        <td>@(f.Cliente ?? "—")</td>
+                        <td>@(f.Arquitecto ?? "—")</td>
+                    </tr>
+                }
+                @if (Model.Proyectos.Count == 0)
+                {
+                    <tr><td colspan="4" class="tenue">No hay proyectos para mostrar.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
