@@ -1,0 +1,27 @@
+@model RegistroVM
+@{
+    ViewData["Title"] = "Crear cuenta";
+}
+<div class="acceso">
+    <section class="tarjeta formulario">
+        <h1>Crear cuenta</h1>
+        <p class="tenue">Las cuentas nuevas entran con el rol <strong>Cliente</strong>. Un administrador puede cambiarlo después.</p>
+        <form asp-controller="Cuenta" asp-action="Registro" method="post" novalidate>
+            <label>Nombre completo
+                <input type="text" asp-for="Nombre" autocomplete="name" required autofocus>
+            </label>
+            <label>Correo electrónico
+                <input type="email" asp-for="Email" autocomplete="email" required>
+            </label>
+            <label>Contraseña
+                <input type="password" asp-for="Password" autocomplete="new-password" required>
+                <small>Mínimo 8 caracteres, con letras y números.</small>
+            </label>
+            <label>Confirmar contraseña
+                <input type="password" asp-for="Confirmacion" autocomplete="new-password" required>
+            </label>
+            <button class="boton" type="submit">Crear cuenta</button>
+        </form>
+        <p class="tenue centrado">¿Ya tienes cuenta? <a asp-action="Login">Inicia sesión</a></p>
+    </section>
+</div>
