@@ -1,0 +1,10 @@
+@model ErrorVM
+@{
+    ViewData["Title"] = Model.Titulo;
+}
+<section class="tarjeta error-pagina">
+    <p class="codigo">@Model.Codigo</p>
+    <h1>@Model.Titulo</h1>
+    <p class="tenue">@Model.Mensaje</p>
+    <a class="boton" asp-controller="Inicio" asp-action="Index">Volver al inicio</a>
+</section>

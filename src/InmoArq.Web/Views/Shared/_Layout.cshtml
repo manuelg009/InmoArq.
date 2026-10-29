@@ -1,0 +1,72 @@
+@{
+    await Actual.CargarAsync();
+    var controlador = ViewContext.RouteData.Values["controller"]?.ToString();
+    var accion = ViewContext.RouteData.Values["action"]?.ToString();
+    string Activo(string c, string a) => controlador == c && accion == a ? "activo" : "";
+}
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["Title"] · InmoArq</title>
+    <link rel="stylesheet" href="~/css/estilos.css" asp-append-version="true">
+</head>
+<body>
+    <header class="barra">
+        <div class="barra-interior">
+            <a class="marca" asp-controller="Inicio" asp-action="Index"><span class="marca-icono" aria-hidden="true">▲</span> InmoArq</a>
+            @if (Actual.Autenticado)
+            {
+                <nav class="menu" aria-label="Módulos">
+                    <a asp-controller="Inicio" asp-action="Index" class="@Activo("Inicio", "Index")">Inicio</a>
+                    @foreach (var m in Actual.ModulosVisibles)
+                    {
+                        <a asp-controller="@m.Controlador" asp-action="@m.Accion" class="@Activo(m.Controlador, m.Accion)">@m.Titulo</a>
+                    }
+                </nav>
+                <div class="sesion">
+                    <a class="quien" asp-controller="Inicio" asp-action="Perfil">
+                        <strong>@Actual.Usuario!.Nombre</strong>
+                        <span class="insignia">@Actual.NombreRol</span>
+                    </a>
+                    <form asp-controller="Cuenta" asp-action="Logout" method="post">
+                        <button class="boton boton-sutil" type="submit">Cerrar sesión</button>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <nav class="menu">
+                    <a asp-controller="Cuenta" asp-action="Login">Iniciar sesión</a>
+                    <a asp-controller="Cuenta" asp-action="Registro">Crear cuenta</a>
+                </nav>
+            }
+        </div>
+    </header>
+
+    <main class="contenido">
+        <div class="mensajes">
+            @if (TempData["Exito"] is string exito)
+            {
+                <div class="mensaje mensaje-exito" role="alert">@exito</div>
+            }
+            @if (TempData["Error"] is string error)
+            {
+                <div class="mensaje mensaje-error" role="alert">@error</div>
+            }
+            @if (TempData["Aviso"] is string aviso)
+            {
+                <div class="mensaje mensaje-aviso" role="alert">@aviso</div>
+            }
+            @foreach (var e in ViewContext.ModelState[string.Empty]?.Errors ?? Enumerable.Empty<Microsoft.AspNetCore.Mvc.ModelBinding.ModelError>())
+            {
+                <div class="mensaje mensaje-error" role="alert">@e.ErrorMessage</div>
+            }
+        </div>
+        @RenderBody()
+    </main>
+
+    <footer class="pie">InmoArq · e-Commerce inmobiliaria y diseño arquitectónico · Incremento 1</footer>
+</body>
+</html>
