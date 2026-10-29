@@ -1,0 +1,37 @@
+@model LoginVM
+@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+<div class="acceso">
+    <section class="tarjeta formulario">
+        <h1>Iniciar sesión</h1>
+        <p class="tenue">Accede con tu correo y contraseña.</p>
+        <form asp-controller="Cuenta" asp-action="Login" method="post" novalidate>
+            <input type="hidden" asp-for="ReturnUrl">
+            <label>Correo electrónico
+                <input type="email" asp-for="Email" autocomplete="username" required autofocus>
+            </label>
+            <label>Contraseña
+                <input type="password" asp-for="Password" autocomplete="current-password" required>
+            </label>
+            <button class="boton" type="submit">Entrar</button>
+        </form>
+        <p class="tenue centrado">¿No tienes cuenta? <a asp-action="Registro">Regístrate</a></p>
+    </section>
+
+    @if (Configuracion.GetValue("Seguridad:MostrarUsuariosDemo", true))
+    {
+        <aside class="tarjeta demo">
+            <h2>Usuarios de prueba</h2>
+            <table class="tabla compacta">
+                <thead><tr><th>Rol</th><th>Correo</th><th>Contraseña</th></tr></thead>
+                <tbody>
+                    @foreach (var u in InmoArq.Web.Data.DbInicializador.UsuariosDemo)
+                    {
+                        <tr><td>@u.Rol</td><td>@u.Email</td><td><code>@u.Clave</code></td></tr>
+                    }
+                </tbody>
+            </table>
+        </aside>
+    }
+</div>

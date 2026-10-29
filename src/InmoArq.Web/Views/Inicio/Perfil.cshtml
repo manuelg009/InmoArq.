@@ -1,0 +1,34 @@
+@model List<Permiso>
+@{
+    ViewData["Title"] = "Mi perfil";
+    var u = Actual.Usuario!;
+}
+<div class="encabezado"><h1>Mi perfil</h1></div>
+<div class="rejilla dos">
+    <section class="tarjeta">
+        <h2>Datos de la cuenta</h2>
+        <dl class="datos">
+            <dt>Nombre</dt><dd>@u.Nombre</dd>
+            <dt>Correo</dt><dd>@u.Email</dd>
+            <dt>Rol</dt><dd><span class="insignia">@Actual.NombreRol</span></dd>
+            <dt>Miembro desde</dt><dd>@Formato.FechaRd(u.CreadoEn)</dd>
+            <dt>Último acceso</dt><dd>@Formato.FechaRd(u.UltimoAcceso)</dd>
+        </dl>
+    </section>
+    <section class="tarjeta">
+        <h2>Permisos de mi rol</h2>
+        @if (Model.Count > 0)
+        {
+            <ul class="lista-permisos">
+                @foreach (var p in Model)
+                {
+                    <li><span class="permiso">@p.Codigo</span> @p.Descripcion</li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="tenue">Tu rol no tiene permisos asignados.</p>
+        }
+    </section>
+</div>

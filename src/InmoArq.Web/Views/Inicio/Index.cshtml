@@ -1,0 +1,26 @@
+@{
+    ViewData["Title"] = "Inicio";
+    var modulos = Actual.ModulosVisibles.ToList();
+}
+<div class="encabezado">
+    <h1>Hola, @Actual.Usuario!.Nombre.Split(' ')[0]</h1>
+    <p class="tenue">Tu rol es <span class="insignia">@Actual.NombreRol</span>. Estos son los módulos a los que tienes acceso.</p>
+</div>
+
+@if (modulos.Count > 0)
+{
+    <div class="rejilla">
+        @foreach (var m in modulos)
+        {
+            <a class="tarjeta modulo" asp-controller="@m.Controlador" asp-action="@m.Accion">
+                <h2>@m.Titulo</h2>
+                <p>@m.Descripcion</p>
+                <span class="permiso">@m.Permiso</span>
+            </a>
+        }
+    </div>
+}
+else
+{
+    <div class="tarjeta"><p>Tu rol todavía no tiene módulos asignados. Contacta al administrador.</p></div>
+}
