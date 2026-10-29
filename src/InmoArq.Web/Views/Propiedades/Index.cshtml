@@ -1,0 +1,53 @@
+@model List<FilaPropiedad>
+@{
+    ViewData["Title"] = "Propiedades";
+}
+<div class="encabezado">
+    <h1>Propiedades</h1>
+    <p class="tenue">Catálogo de inmuebles disponibles.</p>
+</div>
+
+@if (Actual.Puede(Permisos.PropiedadesGestionar))
+{
+    <section class="tarjeta">
+        <h2>Publicar propiedad</h2>
+        <form asp-controller="Propiedades" asp-action="Nueva" method="post" class="en-linea">
+            <label>Título <input name="titulo" required></label>
+            <label>Ubicación <input name="ubicacion" required></label>
+            <label>Operación
+                <select name="operacion">
+                    @foreach (var o in InmoArq.Web.Controllers.PropiedadesController.Operaciones)
+                    {
+                        <option>@o</option>
+                    }
+                </select>
+            </label>
+            <label>Precio (RD$) <input name="precio" inputmode="numeric" required></label>
+            <button class="boton" type="submit">Publicar</button>
+        </form>
+    </section>
+}
+
+<section class="tarjeta">
+    <div class="desplazable">
+        <table class="tabla">
+            <thead><tr><th>Propiedad</th><th>Ubicación</th><th>Operación</th><th class="num">Precio</th><th>Publicada por</th></tr></thead>
+            <tbody>
+                @foreach (var f in Model)
+                {
+                    <tr>
+                        <td>@f.Propiedad.Titulo</td>
+                        <td>@f.Propiedad.Ubicacion</td>
+                        <td>@f.Propiedad.Operacion</td>
+                        <td class="num">@Formato.Pesos(f.Propiedad.Precio)</td>
+                        <td>@(f.Autor ?? "—")</td>
+                    </tr>
+                }
+                @if (Model.Count == 0)
+                {
+                    <tr><td colspan="5" class="tenue">No hay propiedades publicadas.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
