@@ -2,7 +2,7 @@
 
 Plataforma de e-Commerce inmobiliaria y diseño arquitectónico. Este incremento implementa la autenticación, la autorización por roles y permisos, y la trazabilidad de las operaciones.
 
-**Curso:** ISO615 – Desarrollo de Software · **Estudiante:** Miguel Eduardo Frometa Cipion · **Matrícula:** 10161072
+**Curso:** ISO615 – Desarrollo de Software · **Estudiante:** Manuel Guzman · **Matrícula:** A00118549
 
 ## Qué incluye
 
