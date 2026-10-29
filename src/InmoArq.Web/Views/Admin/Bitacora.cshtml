@@ -1,0 +1,44 @@
+@model BitacoraVM
+@{
+    ViewData["Title"] = "Bitácora";
+}
+<div class="encabezado">
+    <h1>Bitácora de accesos</h1>
+    <p class="tenue">Registro de inicios de sesión, accesos denegados y cambios de roles y permisos (últimos 300).</p>
+</div>
+
+<section class="tarjeta">
+    <form asp-controller="Admin" asp-action="Bitacora" method="get" class="en-linea filtro">
+        <label>Filtrar por evento
+            <select name="evento" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                @foreach (var e in Model.Eventos)
+                {
+                    <option selected="@(e == Model.Filtro)">@e</option>
+                }
+            </select>
+        </label>
+        <noscript><button class="boton" type="submit">Filtrar</button></noscript>
+    </form>
+    <div class="desplazable">
+        <table class="tabla compacta">
+            <thead><tr><th>Fecha (hora RD)</th><th>Evento</th><th>Usuario</th><th>Detalle</th><th>IP</th></tr></thead>
+            <tbody>
+                @foreach (var r in Model.Registros)
+                {
+                    <tr>
+                        <td class="nowrap">@Formato.FechaRd(r.Fecha)</td>
+                        <td><span class="evento ev-@r.Evento.ToLowerInvariant()">@r.Evento</span></td>
+                        <td>@(r.Email ?? "—")</td>
+                        <td>@r.Detalle</td>
+                        <td class="tenue">@(r.Ip ?? "—")</td>
+                    </tr>
+                }
+                @if (Model.Registros.Count == 0)
+                {
+                    <tr><td colspan="5" class="tenue">Sin registros.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
