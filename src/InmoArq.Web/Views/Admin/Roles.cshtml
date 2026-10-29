@@ -1,0 +1,58 @@
+@model RolesVM
+@{
+    ViewData["Title"] = "Roles y permisos";
+}
+<div class="encabezado">
+    <h1>Roles y permisos</h1>
+    <p class="tenue">Marca qué puede hacer cada rol. Los permisos con candado no se pueden quitar al Administrador para que el sistema nunca quede sin acceso.</p>
+</div>
+
+<section class="tarjeta">
+    <form asp-controller="Admin" asp-action="Roles" method="post">
+        <div class="desplazable">
+            <table class="tabla matriz">
+                <thead>
+                    <tr>
+                        <th>Permiso</th>
+                        @foreach (var f in Model.Roles)
+                        {
+                            <th class="centrado">@f.Rol.Nombre<br><small class="tenue">@f.TotalUsuarios usuario(s)</small></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Model.Permisos)
+                    {
+                        <tr>
+                            <td><span class="permiso">@p.Codigo</span><br><small class="tenue">@p.Descripcion</small></td>
+                            @foreach (var f in Model.Roles)
+                            {
+                                var bloqueado = f.Rol.Nombre == Roles.Administrador && Roles.CriticosAdmin.Contains(p.Codigo);
+                                <td class="centrado">
+                                    <input type="checkbox" name="rol-@f.Rol.Id" value="@p.Codigo"
+                                           aria-label="@f.Rol.Nombre: @p.Codigo"
+                                           checked="@Model.Asignados.Contains((f.Rol.Id, p.Codigo))"
+                                           disabled="@bloqueado">
+                                    @if (bloqueado)
+                                    {
+                                        <span title="Permiso protegido" aria-hidden="true">🔒</span>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <button class="boton" type="submit">Guardar permisos</button>
+    </form>
+</section>
+
+<section class="tarjeta">
+    <h2>Crear rol</h2>
+    <form asp-controller="Admin" asp-action="NuevoRol" method="post" class="en-linea">
+        <label>Nombre <input name="nombre" required></label>
+        <label>Descripción <input name="descripcion"></label>
+        <button class="boton" type="submit">Crear rol</button>
+    </form>
+</section>

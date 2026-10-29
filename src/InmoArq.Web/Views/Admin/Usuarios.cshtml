@@ -1,0 +1,61 @@
+@model List<FilaUsuario>
+@{
+    ViewData["Title"] = "Usuarios";
+    var roles = (List<Rol>)ViewBag.Roles;
+}
+<div class="encabezado">
+    <h1>Usuarios</h1>
+    <p class="tenue">Asigna el rol de cada cuenta y actívala o desactívala. Los cambios aplican de inmediato.</p>
+</div>
+
+<section class="tarjeta">
+    <div class="desplazable">
+        <table class="tabla">
+            <thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Último acceso</th><th></th></tr></thead>
+            <tbody>
+                @foreach (var f in Model)
+                {
+                    var u = f.Usuario;
+                    var yo = u.Id == Actual.Usuario!.Id;
+                    <tr class="@(u.Activo ? "" : "inactivo")">
+                        <td>@u.Nombre @if (yo) { <span class="tenue">(tú)</span> }</td>
+                        <td>@u.Email</td>
+                        <td>
+                            <form asp-controller="Admin" asp-action="CambiarRol" asp-route-id="@u.Id" method="post" class="fila-form">
+                                <select name="rolId" aria-label="Rol de @u.Nombre" disabled="@yo">
+                                    @foreach (var r in roles)
+                                    {
+                                        <option value="@r.Id" selected="@(r.Id == u.RolId)">@r.Nombre</option>
+                                    }
+                                </select>
+                                @if (!yo)
+                                {
+                                    <button class="boton boton-chico" type="submit">Asignar</button>
+                                }
+                            </form>
+                        </td>
+                        <td>
+                            @if (u.Activo)
+                            {
+                                <span class="estado ok">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="estado no">Inactivo</span>
+                            }
+                        </td>
+                        <td class="tenue">@Formato.FechaRd(u.UltimoAcceso)</td>
+                        <td>
+                            @if (!yo)
+                            {
+                                <form asp-controller="Admin" asp-action="CambiarEstado" asp-route-id="@u.Id" method="post">
+                                    <button class="boton boton-chico @(u.Activo ? "boton-peligro" : "")" type="submit">@(u.Activo ? "Desactivar" : "Activar")</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
